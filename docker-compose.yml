@@ -1,0 +1,70 @@
+version: '3.8'
+
+services:
+  db:
+    image: postgres:16-alpine
+    container_name: ecommerce_postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER:-postgres}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-postgres}
+      POSTGRES_DB: ${POSTGRES_DB:-ecommerce_intelligence}
+    ports:
+      - "5433:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres -d ecommerce_intelligence"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+    networks:
+      - ecommerce_net
+
+  backend:
+    build:
+      context: .
+      dockerfile: docker/backend.Dockerfile
+    container_name: ecommerce_backend
+    restart: unless-stopped
+    depends_on:
+      db:
+        condition: service_healthy
+    environment:
+      APP_NAME: "E-Commerce Intelligence & Decision Support Platform"
+      APP_ENV: production
+      API_V1_PREFIX: /api/v1
+      DEBUG: "false"
+      DATABASE_URL: postgresql://${POSTGRES_USER:-postgres}:${POSTGRES_PASSWORD:-postgres}@db:5432/${POSTGRES_DB:-ecommerce_intelligence}
+      SECRET_KEY: ${SECRET_KEY:-change-this-to-a-super-secret-hex-key-in-production-min-32-chars}
+      BACKEND_CORS_ORIGINS: '["http://localhost:3000","http://localhost:3001","http://localhost:5173"]'
+    ports:
+      - "8001:8000"
+    volumes:
+      - ./data:/app/data
+    networks:
+      - ecommerce_net
+
+  frontend:
+    build:
+      context: .
+      dockerfile: docker/frontend.Dockerfile
+    container_name: ecommerce_frontend
+    restart: unless-stopped
+    depends_on:
+      - backend
+    ports:
+      - "3001:80"
+    networks:
+      - ecommerce_net
+
+volumes:
+  postgres_data:
+    driver: local
+
+networks:
+  ecommerce_net:
+    driver: bridge
+
+
+

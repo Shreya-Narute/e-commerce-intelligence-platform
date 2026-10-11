@@ -1,0 +1,86 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+env/
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+.pytest_cache/
+.coverage
+htmlcov/
+.env
+.venv
+venv/
+ENV/
+
+# Test database artifacts (e.g. test_ecommerce.db created by the pytest SQLite setup)
+*.db
+
+# Local pip cache
+backend/.pip_cache/
+
+# Node
+node_modules/
+frontend/node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+.pnpm-debug.log*
+frontend/dist/
+frontend/.env.local
+frontend/.env.development.local
+frontend/.env.test.local
+frontend/.env.production.local
+
+# Database & Data
+data/raw/*.csv
+data/processed/*.parquet
+data/processed/*.csv
+!data/raw/.gitkeep
+!data/processed/.gitkeep
+postgres_data/
+
+# IDE & OS
+.vscode/
+.idea/
+*.swp
+*.swo
+.DS_Store
+Thumbs.db
+
+# Tooling & task artifacts
+.agents/
+*.log
+
+# Local secrets
+.env
+.env.*
+!.env.example
+backend/.env
+frontend/.env
+
+# Database files and backups
+*.sqlite
+*.sqlite3
+*.dump
+*.backup
+*.bak
+
+# Local logs and generated files
+ingestion-error.txt
+*.log
